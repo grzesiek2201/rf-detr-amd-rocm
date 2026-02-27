@@ -1,0 +1,20 @@
+FROM ubuntu:noble
+
+
+RUN apt-get update && apt-get upgrade -y && \
+    apt-get install -y python3 python3-pip python3-venv && \
+    rm -rf /var/lib/apt/lists/*
+
+WORKDIR /ws
+
+RUN python3 -m venv /usr/local/python/venv && \
+    . /usr/local/python/venv/bin/activate && \
+    pip install rfdetr \
+    numpy==1.26.4 && \
+    pip uninstall tb-nightly tensorboardX tensorboard -y && \
+    pip install tensorboard opencv-python
+
+COPY . /ws
+
+ENTRYPOINT [ ". /usr/local/python/venv/bin/activate" ]
+CMD ["/bin/bash"]

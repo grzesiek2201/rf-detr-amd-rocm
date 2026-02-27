@@ -1,0 +1,14 @@
+FROM rocm/pytorch:latest
+
+RUN apt-get update && apt-get upgrade -y
+
+RUN pip install rfdetr \
+    numpy==1.26.4 && \
+    pip uninstall tb-nightly tensorboardX tensorboard -y && \
+    pip install tensorboard 
+
+WORKDIR /ws
+
+COPY . /ws
+
+CMD ["/bin/bash"]

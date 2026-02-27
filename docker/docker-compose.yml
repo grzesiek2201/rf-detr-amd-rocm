@@ -1,0 +1,45 @@
+
+services:
+  rocm:
+    build:
+      context: ..
+      dockerfile: ./docker/Dockerfile.rocm
+    container_name: rocm
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - seccomp=unconfined
+    devices:
+      - /dev/kfd:/dev/kfd
+      - /dev/dri:/dev/dri
+    group_add:
+      - video
+    ipc: host
+    network_mode: host
+    shm_size: 8G
+    tty: true
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ..:/ws
+    environment:
+      - DISPLAY=${DISPLAY}
+    command: ["/bin/bash"]
+
+  cpu:
+    build:
+      context: ..
+      dockerfile: ./docker/Dockerfile.cpu
+    container_name: cpu
+    cap_add:
+      - SYS_PTRACE
+    group_add:
+      - video
+    ipc: host
+    network_mode: host
+    tty: true
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ..:/ws
+    environment:
+      - DISPLAY=${DISPLAY}
+    command: ["/bin/bash"]
