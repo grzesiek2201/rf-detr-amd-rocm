@@ -1,3 +1,10 @@
+# Overview
+Use this repo as guidelines / inspiration when wanting to train and infer [rf-detr](https://github.com/roboflow/rf-detr) **segmentation** models using AMD's GPU, such as RX7800XT.
+
+Using the official AMD's rocm docker container, it's possible to use the gpu acceleration almost seamlessly.
+
+Additionally, there's a `train.py` script to help with training the model, e.g. specifying the dataset directory, model size, etc.
+
 ## Docker build and run
 
 There are currently 2 types of containers:
@@ -10,7 +17,9 @@ If required to see gui output from the container:
 `xhost +local:docker`
 
 ### rocm
-To build and run the docker:
+It's important to use `sudo` here. Without it, no GPU acceleration will be available.
+
+#### Build and run the docker
 
 `sudo docker compose up rocm`
 
@@ -24,6 +33,9 @@ Or run
 to run and attach to the window in one terminal.
 
 ### cpu
+This container uses simple ubuntu base image instead of the ROCm.
+
+#### Build and run the docker
 ```
 docker compose up cpu
 docker exec -it cpu bash
@@ -43,9 +55,15 @@ Run this from the `segmentation` directory.
 python train.py -d ../data/dataset/312x312-no-bg-no-artificial/ -s nano
 ```
 
+To see the possible input arguments, use
+`python train.py --help`
+
 ## Testing
 
 Test the model by using the `eval.py` script, e.g.
 ```
 python segmentation/eval.py -m runs/segm/output2/checkpoint_best_total.pth -i data/images/2025-10-07/image352.png -s nano
 ```
+
+To see the possible input arguments, use
+`python eval.py --help`
